@@ -7,7 +7,7 @@ app = Flask(__name__)
 def index():
     #output_file = filter_localdata('','')
     sheet = filter_localdata('','')
-    print(sheet)
+    #print(sheet)
     return render_template('index.html', rows=sheet)
 
 if __name__ == '__main__':

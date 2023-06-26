@@ -25,8 +25,8 @@ def parses_and_write_csv(directory, csvfile):
                 data["upjong"] = upjong
             #print(data)
             datas.append(data)
-            rows.extend(datas)
         csv_writer.writerows(datas)
+        rows.extend(datas)
     return rows
 
 def line_prepender(filename, line):
@@ -49,7 +49,7 @@ def download_localdata(url, extract_path="/tmp/LOCALDATA_NOWMON_XML"):
 
 def filter_localdata(date, location):
     url = "https://www.localdata.go.kr/datafile/LOCALDATA_NOWMON_XML.zip"
-    output_file = os.path.join("output.csv")
+    output_file = os.path.join("static", "output.csv")
     localdata_path = tempfile.TemporaryDirectory()
     #print(localdata_path.name)
 
@@ -67,7 +67,7 @@ def filter_localdata(date, location):
     hangul_header = ",".join(hangul_fields)
     line_prepender(output_file, hangul_header)
 
-    return sheet
+    return sheet[:20]
     #return output_file
 
 if __name__ == '__main__':
