@@ -1,0 +1,8 @@
+name: python_project
+on_project_start: poetry init --no-interaction
+windows:
+  - build:
+      layout: even-horizontal
+      panes:
+        - vim main.py
+        - find . | entr -c './build_and_run.sh'
