@@ -4,9 +4,18 @@ import csv
 import tempfile
 import urllib.request
 import zipfile
+import ssl
+import logging
+
+ssl._create_default_https_context = ssl._create_unverified_context
+
+# 로거 설정
+logging.basicConfig(filename='localdata.log', level=logging.INFO,
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 fields ={"bplcNm": "", "siteWhlAddr": "", "apvPermYmd": "", "upjong": "", "uptaeNm": ""}
 hangul_fields = ["업소명", "주소", "사업자등록일", "업종", "업태"]
+output_file = os.path.join("static", "output.csv")
 
 def parses_and_write_csv(directory, csvfile):
     csv_writer = csv.DictWriter(csvfile, fieldnames=fields, extrasaction='ignore')
@@ -49,7 +58,6 @@ def download_localdata(url, extract_path="/tmp/LOCALDATA_NOWMON_XML"):
 
 def filter_localdata(date, location):
     url = "https://www.localdata.go.kr/datafile/LOCALDATA_NOWMON_XML.zip"
-    output_file = os.path.join("static", "output.csv")
     localdata_path = tempfile.TemporaryDirectory()
     #print(localdata_path.name)
 
@@ -58,7 +66,7 @@ def filter_localdata(date, location):
 
     sheet = []
     # write csv
-    with open(output_file, 'w', newline='') as csvfile:
+    with open(output_file, 'w', newline='', encoding='UTF-8') as csvfile:
         rows = parses_and_write_csv(localdata_path.name, csvfile)
         sheet.extend(rows)
     localdata_path.cleanup()
@@ -69,6 +77,23 @@ def filter_localdata(date, location):
 
     return sheet[:20]
     #return output_file
+
+def paginate_localdata(number):
+    #filter_localdata('','')
+
+    output_file = os.path.join("static", "output.csv")
+    rows = []
+    try: 
+        with open(output_file, newline='') as csvfile:
+            next(csvfile) # skip header
+            reader = csv.DictReader(csvfile, fieldnames=fields)
+            for row in reader:
+                rows.append(row)
+    except Exception as e:
+        logging.error(f"CSV file read error (column {reader.line_num}): {e}")
+
+    page_count = len(rows) // 20
+    return page_count, rows[(number-1)*20:number*20]
 
 if __name__ == '__main__':
     date =''
