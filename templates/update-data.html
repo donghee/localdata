@@ -12,11 +12,11 @@
                 <tbody class="divide-y divide-gray-200">
                   {% for row in rows %}
                   <tr>
-                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{row.bplcNm}}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{row.siteWhlAddr}}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{row.apvPermYmd}}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{row.upjong}}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{row.uptaeNm}}</td>
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 max-w-32 truncate">{{row.bplcNm}}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 max-w-xs truncate">{{row.siteWhlAddr}}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 max-w-20 truncate">{{row.apvPermYmd}}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 max-w-20 truncate">{{row.upjong}}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 max-w-20 truncate">{{row.uptaeNm}}</td>
                   </tr>
                   {% endfor %}
                 </tbody>

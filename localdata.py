@@ -78,7 +78,7 @@ def filter_localdata(date, location):
     return sheet[:20]
     #return output_file
 
-def paginate_localdata(page_number, location=u"경기도"):
+def paginate_localdata(page_number, location=u"경기도", start='', end=''):
     #filter_localdata('','')
 
     output_file = os.path.join("static", "output.csv")
@@ -93,6 +93,12 @@ def paginate_localdata(page_number, location=u"경기도"):
         logging.error(f"CSV file read error (column {reader.line_num}): {e}")
 
     rows = [row for row in rows if row["siteWhlAddr"].startswith(location)] 
+
+    # TODO check date format
+
+    rows = [row for row in rows if row["apvPermYmd"] >= start] 
+    rows = [row for row in rows if row["apvPermYmd"] <= end] 
+    rows = sorted(rows, key=lambda x: x["apvPermYmd"], reverse=False)
 
     page_count = len(rows) // 20
     return page_count, rows[(page_number-1)*20:page_number*20]
