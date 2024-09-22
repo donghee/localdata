@@ -9,22 +9,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.6/flowbite.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.6/datepicker.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+
   </head>
 
   <body>
     <div class="max-w-5xl mx-auto">
-      <h1 class="text-base font-semibold leading-6 text-gray-900 my-6">인허가 데이터 다운로드</h1>
+      <a href="/">
+        <h1 class="text-base font-semibold leading-6 text-gray-900 my-6">인허가 데이터 다운로드</h1>
+      </a>
       <div class="lg:flex xl:max-w-screen-xl m-auto items-end justify-between py-6">
+        
         <div class="w-1/2">
-          <div date-rangepicker class="flex items-center">
+          <div date-rangepicker class="flex items-center" hx-trigger="change" hx-get="/update-data" hx-target="#localdata">
+
             <div class="relative">
               <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
               </div>
               <input name="start" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm
-                                             rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700
-                                             dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
-                                             dark:focus:border-blue-500" placeholder="시작 날짜">
+                rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700
+                dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
+                dark:focus:border-blue-500" placeholder="시작 날짜">
             </div>
             <span class="mx-4 text-gray-500">~</span>
             <div class="relative">
@@ -32,22 +38,34 @@
                 <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
               </div>
               <input name="end" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-                                           focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700
-                                           dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
-                                           dark:focus:border-blue-500" placeholder="마지막 날짜">
+                focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700
+                dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
+                dark:focus:border-blue-500" placeholder="마지막 날짜">
             </div>
           </div>
-        </div>
+         </div>
+
         <div class="flex w-1/2 mx-4">
           <div class="w-1/2">
-            <select id="location" name="location" class="mt-2 block w-full rounded-md border-0 py-2 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <select id="location" name="location" class="mt-2 block w-full rounded-md border-0 py-2 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" hx-trigger="change" hx-get="/update-data" hx-target="#localdata">
+              <option disabled selected value>지역 선택</option>
               <option>서울</option>
-              <option selected>경기도</option>
-              <option>강원도</option>
-              <option>충청도</option>
-              <option>경상도</option>
-              <option>전라도</option>
-              <option>제주도</option>
+              <option>경기</option>
+              <option>강원</option>
+              <option>충청</option>
+              <option>경상</option>
+              <option>경북</option>
+              <option>경남</option>
+              <option>인천</option>
+              <option>대전</option>
+              <option>대구</option>
+              <option>광주</option>
+              <option>울산</option>
+              <option>창원</option>
+              <option>세종</option>
+              <option>전라</option>
+              <option>전북</option>
+              <option>제주</option>
             </select>
           </div>
 
@@ -61,82 +79,13 @@
         </div>
       </div>
 
-      <div>
-      </div>
-
+      <!-- 데이터 -->
       <div class="px-2 sm:px-2 lg:px-2">
         <div class="mt-8 flow-root">
           <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <table class="min-w-full divide-y divide-gray-300">
-                <thead>
-                  <tr>
-                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">업소명</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">주소</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">사업자등록일</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">업종</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">업태</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                  {% for row in rows %}
-                  <tr>
-                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{row.bplcNm}}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{row.siteWhlAddr}}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{row.apvPermYmd}}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{row.upjong}}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{row.uptaeNm}}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+            <div id="localdata" class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              {% include 'update-data.html' %}
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 페이지네이션 컨트롤 추가 -->
-      <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-        <div class="flex flex-1 justify-between sm:hidden">
-          <a href="#" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">이전</a>
-          <a href="#" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">다음</a>
-        </div>
-        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-          <div>
-            <p class="text-sm text-gray-700">
-              전체 <span class="font-medium">{{ page_count * 20 }}</span> 결과 중 <span class="font-medium">{{ (page_number-1) * 20 + 1}} </span> 에서 <span class="font-medium">{{ page_number * 20 }}</span> 까지 표시
-            </p>
-          </div>
-          <div>
-            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-              <a href="/page/{{ page_number-1 }}" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                <span class="sr-only">이전</span>
-                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-                </svg>
-              </a>
-
-              {% for i in range(page_number - 5, page_number + 6) %}
-                {% if i > 0 and i <= page_count %}
-                  {% if i == page_number %}
-                    <a href="/page/{{ i }}" aria-current="page" class="relative z-10 inline-flex items-center
-                      bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline
-                      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{{ i }}</a>
-                  {% else %}
-                    <a href="/page/{{ i }}" class="relative inline-flex items-center px-4 py-2 text-sm
-                      font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20
-                      focus:outline-offset-0">{{ i }}</a>
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
-
-              <a href="/page/{{ page_number+1}}" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                <span class="sr-only">다음</span>
-                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-                </svg>
-              </a>
-            </nav>
           </div>
         </div>
       </div>
