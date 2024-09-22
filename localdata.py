@@ -19,7 +19,6 @@ output_file = os.path.join("static", "output.csv")
 
 def parses_and_write_csv(directory, csvfile):
     csv_writer = csv.DictWriter(csvfile, fieldnames=fields, extrasaction='ignore')
-    rows = []
 
     for xml_file in os.listdir(directory):
         xml_data = open(os.path.join(directory, xml_file), "r").read()
@@ -35,8 +34,6 @@ def parses_and_write_csv(directory, csvfile):
             #print(data)
             datas.append(data)
         csv_writer.writerows(datas)
-        rows.extend(datas)
-    return rows
 
 def line_prepender(filename, line):
     with open(filename, 'r+') as csvfile:
@@ -64,27 +61,21 @@ def filter_localdata(date, location):
     # download localdata
     download_localdata(url, extract_path=localdata_path.name)
 
-    sheet = []
     # write csv
     with open(output_file, 'w', newline='', encoding='UTF-8') as csvfile:
-        rows = parses_and_write_csv(localdata_path.name, csvfile)
-        sheet.extend(rows)
+        parses_and_write_csv(localdata_path.name, csvfile)
     localdata_path.cleanup()
 
     # add hangul header
     hangul_header = ",".join(hangul_fields)
     line_prepender(output_file, hangul_header)
 
-    return sheet[:20]
-    #return output_file
+    return output_file
 
-def paginate_localdata(page_number, location=u"경기도", start='', end=''):
-    #filter_localdata('','')
-
-    output_file = os.path.join("static", "output.csv")
+def paginate_localdata(localdata_file, page_number, location='', start='', end=''):
     rows = []
     try: 
-        with open(output_file, newline='') as csvfile:
+        with open(localdata_file, newline='') as csvfile:
             next(csvfile) # skip header
             reader = csv.DictReader(csvfile, fieldnames=fields)
             for row in reader:
@@ -92,13 +83,15 @@ def paginate_localdata(page_number, location=u"경기도", start='', end=''):
     except Exception as e:
         logging.error(f"CSV file read error (column {reader.line_num}): {e}")
 
-    rows = [row for row in rows if row["siteWhlAddr"].startswith(location)] 
+    if location:
+        rows = [row for row in rows if row["siteWhlAddr"].startswith(location)] 
 
     # TODO check date format
-
-    rows = [row for row in rows if row["apvPermYmd"] >= start] 
-    rows = [row for row in rows if row["apvPermYmd"] <= end] 
-    rows = sorted(rows, key=lambda x: x["apvPermYmd"], reverse=False)
+    if start:
+        rows = [row for row in rows if row["apvPermYmd"] >= start] 
+    if end:
+        rows = [row for row in rows if row["apvPermYmd"] <= end] 
+    rows = sorted(rows, key=lambda x: x["apvPermYmd"], reverse=True)
 
     page_count = len(rows) // 20
     return page_count, rows[(page_number-1)*20:page_number*20]
